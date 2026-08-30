@@ -1,8 +1,13 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, BookOpen, User, Search, Sparkles } from 'lucide-react';
+import { LogOut, BookOpen, Search, Sparkles } from 'lucide-react';
 
-const Navbar = ({ searchQuery, setSearchQuery }) => {
+interface NavbarProps {
+  searchQuery?: string;
+  setSearchQuery?: (query: string) => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ searchQuery = '', setSearchQuery }) => {
   const { user, logout } = useAuth();
 
   return (

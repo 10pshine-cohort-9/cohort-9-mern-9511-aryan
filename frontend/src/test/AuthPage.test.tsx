@@ -35,8 +35,10 @@ describe('AuthPage Component Unit Tests', () => {
     );
 
     const tabs = screen.getAllByRole('button');
-    const signUpTab = tabs.find((btn) => btn.textContent.trim() === 'Sign Up');
-    fireEvent.click(signUpTab);
+    const signUpTab = tabs.find((btn) => btn.textContent?.trim() === 'Sign Up');
+    if (signUpTab) {
+      fireEvent.click(signUpTab);
+    }
 
     expect(screen.getByText('Full Name')).toBeInTheDocument();
     expect(screen.getByText('Confirm Password')).toBeInTheDocument();

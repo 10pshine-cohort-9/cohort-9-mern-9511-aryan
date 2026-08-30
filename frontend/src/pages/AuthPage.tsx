@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { BookOpen, Sparkles, Mail, Lock, User, ArrowRight, ShieldCheck } from 'lucide-react';
+import { BookOpen, Mail, Lock, User, ArrowRight, ShieldCheck } from 'lucide-react';
 
-const AuthPage = () => {
+const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -19,7 +19,7 @@ const AuthPage = () => {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -51,7 +51,7 @@ const AuthPage = () => {
         await signup(name, email, password);
       }
       navigate('/dashboard');
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response?.data?.message || err.message || 'Authentication failed. Please try again.');
     } finally {
       setLoading(false);
@@ -168,10 +168,11 @@ const AuthPage = () => {
           
           {!isLogin && (
             <div className="form-group" style={{ marginBottom: 0 }}>
-              <label className="form-label">Full Name</label>
+              <label htmlFor="auth-name" className="form-label">Full Name</label>
               <div style={{ position: 'relative' }}>
                 <User size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
+                  id="auth-name"
                   type="text"
                   className="form-input"
                   placeholder="Aryan Mirza"
@@ -184,10 +185,11 @@ const AuthPage = () => {
           )}
 
           <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label">Email Address</label>
+            <label htmlFor="auth-email" className="form-label">Email Address</label>
             <div style={{ position: 'relative' }}>
               <Mail size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
               <input
+                id="auth-email"
                 type="email"
                 className="form-input"
                 placeholder="name@example.com"
@@ -199,10 +201,11 @@ const AuthPage = () => {
           </div>
 
           <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label">Password</label>
+            <label htmlFor="auth-password" className="form-label">Password</label>
             <div style={{ position: 'relative' }}>
               <Lock size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
               <input
+                id="auth-password"
                 type="password"
                 className="form-input"
                 placeholder="••••••••"
@@ -215,10 +218,11 @@ const AuthPage = () => {
 
           {!isLogin && (
             <div className="form-group" style={{ marginBottom: 0 }}>
-              <label className="form-label">Confirm Password</label>
+              <label htmlFor="auth-confirm-password" className="form-label">Confirm Password</label>
               <div style={{ position: 'relative' }}>
                 <ShieldCheck size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
+                  id="auth-confirm-password"
                   type="password"
                   className="form-input"
                   placeholder="••••••••"

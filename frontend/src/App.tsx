@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
 
+interface ProtectedRouteProps {
+  children: ReactNode;
+}
+
 // Protected Route wrapper component
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
@@ -27,7 +31,7 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/auth" replace />;
   }
 
-  return children;
+  return <>{children}</>;
 };
 
 function App() {

@@ -1,9 +1,17 @@
 import React from 'react';
 import { Pin, Edit3, Trash2, Tag, Calendar } from 'lucide-react';
+import { Note } from '../types';
 
-const NoteCard = ({ note, onEdit, onDelete, onTogglePin }) => {
+interface NoteCardProps {
+  note: Note;
+  onEdit: (note: Note) => void;
+  onDelete: (note: Note) => void;
+  onTogglePin: (note: Note) => void;
+}
+
+const NoteCard: React.FC<NoteCardProps> = ({ note, onEdit, onDelete, onTogglePin }) => {
   // Helper to extract clean plain text preview from rich text HTML string
-  const getPlainTextPreview = (html) => {
+  const getPlainTextPreview = (html: string) => {
     if (!html) return '';
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = html;
@@ -11,7 +19,7 @@ const NoteCard = ({ note, onEdit, onDelete, onTogglePin }) => {
     return text.length > 140 ? text.substring(0, 140) + '...' : text;
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString?: string) => {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {

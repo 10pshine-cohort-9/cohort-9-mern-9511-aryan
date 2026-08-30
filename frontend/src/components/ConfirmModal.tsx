@@ -1,7 +1,16 @@
 import React from 'react';
 import { AlertTriangle, X } from 'lucide-react';
 
-const ConfirmModal = ({ isOpen, onClose, onConfirm, title, message, loading }) => {
+interface ConfirmModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title?: string;
+  message?: string;
+  loading?: boolean;
+}
+
+const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose, onConfirm, title, message, loading }) => {
   if (!isOpen) return null;
 
   return (

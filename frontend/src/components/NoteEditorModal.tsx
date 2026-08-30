@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill-new';
-import { X, Save, Pin, Tag, Palette, Check } from 'lucide-react';
+import { X, Save, Pin, Tag as TagIcon, Palette, Check } from 'lucide-react';
+import { Note, NoteSavePayload } from '../types';
+
+interface NoteEditorModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (noteData: NoteSavePayload) => Promise<void>;
+  noteToEdit: Note | null;
+}
 
 const COLOR_PALETTE = [
   { name: 'Indigo', value: '#6366f1' },
@@ -20,11 +28,11 @@ const QUILL_MODULES = {
   ]
 };
 
-const NoteEditorModal = ({ isOpen, onClose, onSave, noteToEdit }) => {
+const NoteEditorModal: React.FC<NoteEditorModalProps> = ({ isOpen, onClose, onSave, noteToEdit }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tagInput, setTagInput] = useState('');
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState<string[]>([]);
   const [color, setColor] = useState('#6366f1');
   const [isPinned, setIsPinned] = useState(false);
   const [error, setError] = useState('');
@@ -51,7 +59,7 @@ const NoteEditorModal = ({ isOpen, onClose, onSave, noteToEdit }) => {
 
   if (!isOpen) return null;
 
-  const handleAddTag = (e) => {
+  const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if ((e.key === 'Enter' || e.key === ',') && tagInput.trim()) {
       e.preventDefault();
       const cleanedTag = tagInput.trim().replace(/^#/, '');
@@ -62,11 +70,11 @@ const NoteEditorModal = ({ isOpen, onClose, onSave, noteToEdit }) => {
     }
   };
 
-  const handleRemoveTag = (tagToRemove) => {
+  const handleRemoveTag = (tagToRemove: string) => {
     setTags(tags.filter((t) => t !== tagToRemove));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) {
       setError('Please enter a note title.');
@@ -91,7 +99,7 @@ const NoteEditorModal = ({ isOpen, onClose, onSave, noteToEdit }) => {
         isPinned
       });
       onClose();
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response?.data?.message || err.message || 'Failed to save note.');
     } finally {
       setLoading(false);
@@ -223,7 +231,7 @@ const NoteEditorModal = ({ isOpen, onClose, onSave, noteToEdit }) => {
           {/* Tags Input */}
           <div className="form-group" style={{ marginBottom: 0 }}>
             <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Tag size={14} /> Tags (Press Enter or comma to add)
+              <TagIcon size={14} /> Tags (Press Enter or comma to add)
             </label>
             <input
               type="text"
@@ -236,13 +244,16 @@ const NoteEditorModal = ({ isOpen, onClose, onSave, noteToEdit }) => {
             {tags.length > 0 && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
                 {tags.map((tag, index) => (
-                  <span key={index} className="tag-badge" style={{ padding: '4px 10px', fontSize: '0.8rem' }}>
+                  <span key={index} className="tag-badge" style={{ padding: '4px 10px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center' }}>
                     #{tag}
-                    <X
-                      size={12}
-                      style={{ cursor: 'pointer', marginLeft: '4px' }}
+                    <button
+                      type="button"
+                      aria-label={`Remove tag ${tag}`}
                       onClick={() => handleRemoveTag(tag)}
-                    />
+                      style={{ background: 'none', border: 'none', padding: 0, margin: 0, cursor: 'pointer', color: 'inherit', display: 'inline-flex', alignItems: 'center', marginLeft: '4px' }}
+                    >
+                      <X size={12} />
+                    </button>
                   </span>
                 ))}
               </div>

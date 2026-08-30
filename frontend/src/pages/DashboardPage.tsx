@@ -4,10 +4,11 @@ import Navbar from '../components/Navbar';
 import NoteCard from '../components/NoteCard';
 import NoteEditorModal from '../components/NoteEditorModal';
 import ConfirmModal from '../components/ConfirmModal';
-import { Plus, BookOpen, Pin, Tag, Filter, SearchX, RefreshCw } from 'lucide-react';
+import { Plus, BookOpen, Pin, Filter, SearchX, RefreshCw } from 'lucide-react';
+import { Note, NoteSavePayload } from '../types';
 
-const DashboardPage = () => {
-  const [notes, setNotes] = useState([]);
+const DashboardPage: React.FC = () => {
+  const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -15,10 +16,10 @@ const DashboardPage = () => {
 
   // Modal States
   const [isEditorOpen, setIsEditorOpen] = useState(false);
-  const [noteToEdit, setNoteToEdit] = useState(null);
+  const [noteToEdit, setNoteToEdit] = useState<Note | null>(null);
   
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [noteToDelete, setNoteToDelete] = useState(null);
+  const [noteToDelete, setNoteToDelete] = useState<Note | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const fetchNotes = async () => {
@@ -26,7 +27,7 @@ const DashboardPage = () => {
       setLoading(true);
       setError('');
       const res = await api.get('/notes');
-      if (res.data.success) {
+      if (res.data && res.data.success) {
         setNotes(res.data.data);
       }
     } catch (err) {
@@ -43,7 +44,7 @@ const DashboardPage = () => {
 
   // Compute unique list of tags across all notes
   const allTags = useMemo(() => {
-    const tagSet = new Set();
+    const tagSet = new Set<string>();
     notes.forEach((note) => {
       if (Array.isArray(note.tags)) {
         note.tags.forEach((tag) => tagSet.add(tag));
@@ -76,38 +77,47 @@ const DashboardPage = () => {
     setIsEditorOpen(true);
   };
 
-  const handleOpenEditModal = (note) => {
+  const handleOpenEditModal = (note: Note) => {
     setNoteToEdit(note);
     setIsEditorOpen(true);
   };
 
-  const handleSaveNote = async (noteData) => {
-    if (noteToEdit) {
-      const res = await api.put(`/notes/${noteToEdit._id}`, noteData);
-      if (res.data.success) {
-        setNotes(notes.map((n) => (n._id === noteToEdit._id ? res.data.data : n)));
+  const handleSaveNote = async (noteData: NoteSavePayload): Promise<void> => {
+    try {
+      if (noteToEdit) {
+        const res = await api.put(`/notes/${noteToEdit._id}`, noteData);
+        if (res.data && res.data.success) {
+          setNotes((prevNotes) => prevNotes.map((n) => (n._id === noteToEdit._id ? res.data.data : n)));
+        } else {
+          throw new Error(res.data?.message || 'Failed to update note.');
+        }
+      } else {
+        const res = await api.post('/notes', noteData);
+        if (res.data && res.data.success) {
+          setNotes((prevNotes) => [res.data.data, ...prevNotes]);
+        } else {
+          throw new Error(res.data?.message || 'Failed to create note.');
+        }
       }
-    } else {
-      const res = await api.post('/notes', noteData);
-      if (res.data.success) {
-        setNotes([res.data.data, ...notes]);
-      }
+    } catch (err: any) {
+      const message = err.response?.data?.message || err.message || 'Failed to save note.';
+      throw new Error(message);
     }
   };
 
-  const handleTogglePin = async (note) => {
+  const handleTogglePin = async (note: Note) => {
     try {
       const updatedPinState = !note.isPinned;
       const res = await api.put(`/notes/${note._id}`, { isPinned: updatedPinState });
-      if (res.data.success) {
-        setNotes(notes.map((n) => (n._id === note._id ? res.data.data : n)));
+      if (res.data && res.data.success) {
+        setNotes((prevNotes) => prevNotes.map((n) => (n._id === note._id ? res.data.data : n)));
       }
     } catch (err) {
       console.error('Toggle pin error:', err);
     }
   };
 
-  const handleOpenDeleteModal = (note) => {
+  const handleOpenDeleteModal = (note: Note) => {
     setNoteToDelete(note);
     setIsConfirmOpen(true);
   };
@@ -117,8 +127,8 @@ const DashboardPage = () => {
     try {
       setDeleteLoading(true);
       const res = await api.delete(`/notes/${noteToDelete._id}`);
-      if (res.data.success) {
-        setNotes(notes.filter((n) => n._id !== noteToDelete._id));
+      if (res.data && res.data.success) {
+        setNotes((prevNotes) => prevNotes.filter((n) => n._id !== noteToDelete._id));
         setIsConfirmOpen(false);
         setNoteToDelete(null);
       }

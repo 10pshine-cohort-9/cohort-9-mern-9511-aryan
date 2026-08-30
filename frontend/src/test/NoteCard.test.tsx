@@ -2,9 +2,10 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import NoteCard from '../components/NoteCard';
+import { Note } from '../types';
 
 describe('NoteCard Component Unit Tests', () => {
-  const sampleNote = {
+  const sampleNote: Note = {
     _id: 'note123',
     title: 'Sprint Planning Notes',
     content: '<p>Discuss architecture and <strong>database schema</strong>.</p>',

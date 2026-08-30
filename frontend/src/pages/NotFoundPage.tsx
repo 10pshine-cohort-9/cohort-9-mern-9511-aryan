@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { AlertCircle, Home } from 'lucide-react';
 
-const NotFoundPage = () => {
+const NotFoundPage: React.FC = () => {
   return (
     <div style={{
       minHeight: '100vh',
