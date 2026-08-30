@@ -1,6 +1,10 @@
 const logger = require('../utils/logger');
 const { AppError } = require('../utils/errors');
 
+/**
+ * Global Express error handling middleware
+ * @type {import('express').ErrorRequestHandler}
+ */
 const errorHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
@@ -10,7 +14,7 @@ const errorHandler = (err, req, res, next) => {
   if (err.name === 'ValidationError') {
     statusCode = 400;
     message = 'Validation failed';
-    errors = Object.values(err.errors).map((el) => el.message);
+    errors = Object.values(err.errors || {}).map((el) => el.message);
   }
 
   // Mongoose Duplicate Key Error

@@ -3,6 +3,19 @@ const User = require('../models/user.model');
 const { UnauthorizedError } = require('../utils/errors');
 const logger = require('../utils/logger');
 
+/**
+ * @typedef {Object} JwtPayload
+ * @property {string} id
+ * @property {number} [iat]
+ * @property {number} [exp]
+ */
+
+/**
+ * Express middleware to protect routes with JWT authentication
+ * @param {import('express').Request & { user?: any }} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const protect = async (req, res, next) => {
   let token;
 
@@ -18,11 +31,15 @@ const protect = async (req, res, next) => {
     throw new UnauthorizedError('Access denied. No token provided.');
   }
 
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    logger.error('JWT_SECRET environment variable is missing.');
+    throw new UnauthorizedError('Server configuration error. JWT_SECRET is missing.');
+  }
+
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET || 'super_secret_jwt_key_notes_app_2026'
-    );
+    /** @type {JwtPayload} */
+    const decoded = /** @type {JwtPayload} */ (jwt.verify(token, secret));
 
     const user = await User.findById(decoded.id).select('-password');
     if (!user) {

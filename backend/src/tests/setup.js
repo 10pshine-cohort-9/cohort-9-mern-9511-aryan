@@ -14,7 +14,7 @@ before(async function () {
       });
     }
   } catch (err) {
-    console.log('Running unit tests with mock database layer');
+    throw new Error(`Test database connection failed: ${err.message}`);
   }
 });
 

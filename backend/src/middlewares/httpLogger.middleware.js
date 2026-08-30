@@ -1,9 +1,9 @@
 const pinoHttp = require('pino-http');
 const logger = require('../utils/logger');
 
-const httpLogger = pinoHttp({
+const httpLogger = /** @type {any} */ (pinoHttp)({
   logger,
-  customLogLevel: (req, res, err) => {
+  customLogLevel: (/** @type {any} */ req, /** @type {any} */ res, /** @type {any} */ err) => {
     if (res.statusCode >= 500 || err) {
       return 'error';
     }
@@ -12,14 +12,14 @@ const httpLogger = pinoHttp({
     }
     return 'info';
   },
-  customSuccessMessage: (req, res) => {
+  customSuccessMessage: (/** @type {any} */ req, /** @type {any} */ res) => {
     return `${req.method} ${req.url} completed with status ${res.statusCode}`;
   },
-  customErrorMessage: (req, res, err) => {
+  customErrorMessage: (/** @type {any} */ req, /** @type {any} */ res, /** @type {any} */ err) => {
     return `${req.method} ${req.url} failed with error: ${err.message}`;
   },
   serializers: {
-    req: (req) => ({
+    req: (/** @type {any} */ req) => ({
       id: req.id,
       method: req.method,
       url: req.url,
@@ -28,7 +28,7 @@ const httpLogger = pinoHttp({
         'user-agent': req.headers['user-agent']
       }
     }),
-    res: (res) => ({
+    res: (/** @type {any} */ res) => ({
       statusCode: res.statusCode
     })
   }
