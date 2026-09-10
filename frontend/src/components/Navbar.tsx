@@ -30,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({ searchQuery = '', setSearchQuery }) => 
           </div>
           <div>
             <h1 style={{ fontSize: '1.25rem', fontWeight: 700, background: 'linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              10P Notes <Sparkles size={16} color="#ec4899" />
+              Track Box <Sparkles size={16} color="#ec4899" />
             </h1>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginTop: '-2px' }}>
               MERN Core Workspace

@@ -1,4 +1,4 @@
-# 10P Notes — MERN Stack Notes Application
+# Track Box — MERN Stack Notes Application
 
 A full-stack notes workspace built for the **10Pearls Internship Program (Cohort 9)**. The application combines a MongoDB, Express, React, and Node.js architecture with a TypeScript-powered frontend, secure JWT authentication, rich-text editing, and complete note CRUD operations.
 
@@ -149,7 +149,7 @@ Then update `backend/.env`:
 
 ```dotenv
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/notes_db
+MONGO_URI=mongodb://localhost:27017/track_box_db
 JWT_SECRET=replace_with_a_long_random_secret
 JWT_EXPIRES_IN=7d
 NODE_ENV=development

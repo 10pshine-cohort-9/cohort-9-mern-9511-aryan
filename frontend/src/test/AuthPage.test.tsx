@@ -21,7 +21,7 @@ describe('AuthPage Component Unit Tests', () => {
       </BrowserRouter>
     );
 
-    expect(screen.getByText('10P Notes Application')).toBeInTheDocument();
+    expect(screen.getByText('Track Box')).toBeInTheDocument();
     expect(screen.getByText('Email Address')).toBeInTheDocument();
     expect(screen.getByText('Password')).toBeInTheDocument();
     expect(screen.queryByText('Full Name')).not.toBeInTheDocument();

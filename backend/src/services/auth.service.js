@@ -6,7 +6,7 @@ const logger = require('../utils/logger');
 const generateToken = (id) => {
   return jwt.sign(
     { id },
-    process.env.JWT_SECRET || 'super_secret_jwt_key_notes_app_2026',
+    process.env.JWT_SECRET || 'super_secret_jwt_key_track_box_2026',
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   );
 };
