@@ -2,6 +2,15 @@ const Note = require('../models/note.model');
 const { NotFoundError, ForbiddenError, BadRequestError } = require('../utils/errors');
 const logger = require('../utils/logger');
 
+/**
+ * Escapes special regex metacharacters in user search input
+ * @param {string} string
+ * @returns {string}
+ */
+const escapeRegex = (string) => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
 const createNote = async (userId, noteData) => {
   const { title, content, tags, isPinned, color } = noteData;
 
@@ -25,13 +34,17 @@ const createNote = async (userId, noteData) => {
 const getNotes = async (userId, query = {}) => {
   const filter = { user: userId };
 
-  if (query.search) {
-    const searchRegex = new RegExp(query.search, 'i');
-    filter.$or = [
-      { title: searchRegex },
-      { content: searchRegex },
-      { tags: searchRegex }
-    ];
+  if (query.search && typeof query.search === 'string') {
+    const sanitizedSearch = query.search.trim().slice(0, 100);
+    if (sanitizedSearch) {
+      const escapedSearch = escapeRegex(sanitizedSearch);
+      const searchRegex = new RegExp(escapedSearch, 'i');
+      filter.$or = [
+        { title: searchRegex },
+        { content: searchRegex },
+        { tags: searchRegex }
+      ];
+    }
   }
 
   if (query.tag) {
@@ -42,8 +55,12 @@ const getNotes = async (userId, query = {}) => {
     filter.isPinned = query.isPinned === 'true';
   }
 
+  const limit = Math.min(parseInt(query.limit, 10) || 100, 100);
+
   const notes = await Note.find(filter)
-    .sort({ isPinned: -1, createdAt: -1 });
+    .sort({ isPinned: -1, createdAt: -1 })
+    .limit(limit)
+    .maxTimeMS(5000);
 
   return notes;
 };

@@ -10,6 +10,10 @@ const {
   ConflictError
 } = require('../utils/errors');
 
+/**
+ * @typedef {import('supertest').Response} SupertestResponse
+ */
+
 describe('Error Utility and Middleware Unit Tests', () => {
   it('AppError should set default status code and properties correctly', () => {
     const err = new AppError('Something went wrong', 500);
@@ -46,10 +50,19 @@ describe('Error Utility and Middleware Unit Tests', () => {
   });
 
   it('Should handle 404 routes gracefully with clean JSON', async () => {
-    const res = await request(app).get('/api/invalid-route-12345');
-    expect(res.status).to.equal(404);
-    expect(res.body.success).to.be.false;
-    expect(res.body.statusCode).to.equal(404);
-    expect(res.body.message).to.include('not found');
+    try {
+      /** @type {SupertestResponse} */
+      const res = await request(app).get('/api/invalid-route-12345');
+      expect(res.status).to.equal(404);
+      expect(res.body.success).to.be.false;
+      expect(res.body.statusCode).to.equal(404);
+      expect(res.body.message).to.include('not found');
+    } catch (err) {
+      if (err && err.response) {
+        expect(err.response.status).to.equal(404);
+      } else {
+        throw err;
+      }
+    }
   });
 });

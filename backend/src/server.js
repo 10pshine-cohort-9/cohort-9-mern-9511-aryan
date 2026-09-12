@@ -11,14 +11,14 @@ connectDB().then(() => {
   });
 
   // Handle unhandled promise rejections
-  process.on('unhandledRejection', (err) => {
-    logger.error(`Unhandled Rejection Error: ${err.message}`);
+  process.on('unhandledRejection', (/** @type {any} */ err) => {
+    logger.error(`Unhandled Rejection Error: ${err && err.message ? err.message : String(err)}`);
     server.close(() => process.exit(1));
   });
 
   // Handle uncaught exceptions
-  process.on('uncaughtException', (err) => {
-    logger.error(`Uncaught Exception Error: ${err.message}`);
+  process.on('uncaughtException', (/** @type {any} */ err) => {
+    logger.error(`Uncaught Exception Error: ${err && err.message ? err.message : String(err)}`);
     process.exit(1);
   });
 });

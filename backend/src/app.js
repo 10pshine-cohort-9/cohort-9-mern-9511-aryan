@@ -8,6 +8,7 @@ const errorHandler = require('./middlewares/error.middleware');
 const apiRoutes = require('./routes');
 const { NotFoundError } = require('./utils/errors');
 
+/** @type {import('express').Application} */
 const app = express();
 
 // Middlewares
