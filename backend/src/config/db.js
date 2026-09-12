@@ -7,7 +7,8 @@ const logger = require('../utils/logger');
  */
 const connectDB = async () => {
   try {
-    const connStr = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/notes_db';
+    const connStr = process.env.MONGO_URI || 'mongodb://localhost:27017/track_box_db';
+ 
     logger.info(`Connecting to database...`);
     const conn = await mongoose.connect(connStr);
     logger.info(`MongoDB Connected: ${conn.connection.host}`);

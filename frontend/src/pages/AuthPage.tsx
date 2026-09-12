@@ -96,7 +96,7 @@ const AuthPage: React.FC = () => {
           </div>
 
           <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', margin: '0 0 6px 0' }}>
-            10P Notes Application
+            Track Box
           </h1>
           <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: 0 }}>
             {isLogin ? 'Welcome back! Sign in to access your rich notes.' : 'Create an account to start managing your rich text notes.'}

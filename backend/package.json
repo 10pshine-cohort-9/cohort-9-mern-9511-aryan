@@ -1,7 +1,7 @@
 {
-  "name": "notes-app-backend",
+  "name": "track-box-backend",
   "version": "1.0.0",
-  "description": "Backend API for Notes Application",
+  "description": "Backend API for Track Box",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -12,7 +12,7 @@
   "keywords": [
     "express",
     "mongoose",
-    "notes-app",
+    "track-box",
     "jwt",
     "pino"
   ],

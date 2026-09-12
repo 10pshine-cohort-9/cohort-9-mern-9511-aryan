@@ -7,7 +7,7 @@ const noteRoutes = require('./note.routes');
 router.get('/health', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'Notes Application Core API is up and running!',
+    message: 'Track Box API is up and running!',
     timestamp: new Date().toISOString()
   });
 });
